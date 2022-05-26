@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#define TAMANHO 10
+#include <time.h>
+#define TAMANHO 100000
 
 // ORDENACAO POR INSERCAO (INSERTION SORT)
 
@@ -54,7 +55,7 @@ int particiona(int *vetor, int inicio, int fim){
             esq++;
         // Recua posicao da direita
         while(vetor[dir] > pivo)
-            dir++;
+            dir--;
         // Troca esq e dir
         if(esq < dir){
             auxiliar = vetor[esq];
@@ -140,20 +141,38 @@ void mergeSort(int *vetor, int inicio, int fim){
     }
 }
 
+void randomizacaoVetor(int *vetor){
+    int i;
+    for(i = 0; i < TAMANHO; i++){
+        vetor[i] = rand() % 100;
+    }
+}
+
 int main()
 {
-    int vetor[TAMANHO] = {5, 6, 33, 1, -10, 124, 15, 22, 46, 22}, i;
+    int vetorQuickSort[TAMANHO], vetorMergeSort[TAMANHO], vetorInsertionSort[TAMANHO];
+    clock_t tempoMergeSort, tempoQuickSort, tempoInsertionSort;
 
-    printf("** VETOR DESORGANIZADO **\n");
-    for(i = 0; i < TAMANHO; i++)
-        printf("[%d] = %d\n", i, vetor[i]);
-    printf("\n");
+    // Atribuicao de valores aleatorios ao vetor
+    randomizacaoVetor(vetorInsertionSort);
+    tempoInsertionSort = clock(); // Armazena o tempo inicial
+    insertionSort(vetorInsertionSort, TAMANHO); // Realiza a ordenacao
+    tempoInsertionSort = clock() - tempoInsertionSort; // Faz tempo final - inicial
+    printf("O tempo gasto pelo InsertionSort foi: %lf segundos\n\n", ((double)tempoInsertionSort)/((CLOCKS_PER_SEC)));
 
-    printf("** VETOR INSERTION SORT **\n");
-    insertionSort(vetor, TAMANHO);
-    for(i = 0; i < TAMANHO; i++)
-        printf("[%d] = %d\n", i, vetor[i]);
-    printf("\n");
+    // Atribuicao de valores aleatorios ao vetor
+    randomizacaoVetor(vetorQuickSort);
+    tempoQuickSort = clock(); // Armazena o tempo inicial
+    quickSort(vetorQuickSort, 0, TAMANHO - 1); // Realiza a ordenacao
+    tempoQuickSort = clock() - tempoQuickSort; // Faz tempo final - inicial
+    printf("O tempo gasto pelo QuickSort foi: %lf segundos\n\n", ((double)tempoQuickSort)/((CLOCKS_PER_SEC)));
+
+    // Atribuicao de valores aleatorios ao vetor
+    randomizacaoVetor(vetorMergeSort);
+    tempoMergeSort = clock(); // Armazena o tempo inicial
+    mergeSort(vetorMergeSort, 0, TAMANHO - 1); // Realiza a ordenacao
+    tempoMergeSort = clock() - tempoMergeSort; // Faz tempo final - inicial
+    printf("O tempo gasto pelo MergeSort foi: %lf segundos\n\n", ((double)tempoMergeSort)/((CLOCKS_PER_SEC)));
 
     return 0;
 }
